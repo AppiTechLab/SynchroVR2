@@ -1,13 +1,14 @@
 package ch.hevs.vr.synchrovr;
 
-import androidx.legacy.content.WakefulBroadcastReceiver;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.content.ComponentName;
 
-public class BootBroadcastReceiver extends WakefulBroadcastReceiver {
+public class BootBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
+
         Log.e("TEST", "broadcast test");
         Intent i = new Intent(Intent.ACTION_MAIN);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);

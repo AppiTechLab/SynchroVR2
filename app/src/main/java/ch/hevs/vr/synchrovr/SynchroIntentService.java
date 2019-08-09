@@ -11,12 +11,9 @@ import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.SyncHttpClient;
 
 import java.net.URISyntaxException;
-
-import cz.msebera.android.httpclient.Header;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -39,7 +36,7 @@ public class SynchroIntentService extends IntentService {
     private Socket mSocket;
     {
         try {
-            mSocket = IO.socket("http://chat.socket.io");
+            mSocket = IO.socket("https://vrcransmontana.ehealth.hevs.ch/");
         } catch (URISyntaxException e) {}
     }
 
@@ -80,20 +77,20 @@ public class SynchroIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.e("TEST", "Intent active");
-        String someUrlHere="http://truc.hevs.ch/VR";
+        String someUrlHere="https://vrcransmontana.ehealth.hevs.ch/";
         WakefulBroadcastReceiver.completeWakefulIntent(intent);
 
-        mSocket.on("new message", new Emitter.Listener() {
+        mSocket.on("begin-1", new Emitter.Listener() {
                     @Override
                     public void call(final Object... args) {
                         Log.e("TEST", "new message");
                     };
+
                 }
         );
         mSocket.connect();
 
-
-        aClient.get(this, someUrlHere, new AsyncHttpResponseHandler() {
+        /*aClient.get(this, someUrlHere, new AsyncHttpResponseHandler() {
             // ... onSuccess here
 
             @Override
@@ -105,7 +102,7 @@ public class SynchroIntentService extends IntentService {
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
 
             }
-        });
+        });*/
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_FOO.equals(action)) {

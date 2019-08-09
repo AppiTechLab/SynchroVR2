@@ -19,6 +19,16 @@
 
         <service android:name=".SynchroIntentService" />
 
+        <receiver
+            android:name=".BootBroadcastReceiver"
+            android:keepScreenOn="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.INPUT_METHOD_CHANGED" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
