@@ -15,5 +15,6 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
 
         Intent i = new Intent(context, SynchroIntentService.class);
         context.startService(i);
+
     }
 }
