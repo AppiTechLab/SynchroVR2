@@ -75,7 +75,7 @@ public class SynchroIntentService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleIntent(final Intent intent) {
         Log.e("TEST", "Intent active");
         String someUrlHere="https://vrcransmontana.ehealth.hevs.ch/";
         WakefulBroadcastReceiver.completeWakefulIntent(intent);
@@ -83,7 +83,59 @@ public class SynchroIntentService extends IntentService {
         mSocket.on("begin-1", new Emitter.Listener() {
                     @Override
                     public void call(final Object... args) {
-                        Log.e("TEST", "new message");
+                            Log.e("TEST", "BEGIN 1");
+                        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.google.android.youtube");
+                        if (launchIntent != null) {
+                            startActivity(launchIntent);
+                        } else {
+                            Log.e("TEST", "There is no package available in android");
+                        }
+
+                    };
+
+                }
+        );
+
+        mSocket.on("begin-2", new Emitter.Listener() {
+                    @Override
+                    public void call(final Object... args) {
+                        Log.e("TEST", "BEGIN 2");
+                        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.google.android.youtube");
+                        if (launchIntent != null) {
+                            startActivity(launchIntent);
+                        } else {
+                            Log.e("TEST", "There is no package available in android");
+                        }
+                    };
+
+                }
+        );
+
+        mSocket.on("begin-3", new Emitter.Listener() {
+                    @Override
+                    public void call(final Object... args) {
+                        Log.e("TEST", "BEGIN 3");
+                        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.google.android.youtube");
+                        if (launchIntent != null) {
+                            startActivity(launchIntent);
+                        } else {
+                            Log.e("TEST", "There is no package available in android");
+                        }
+                    };
+
+                }
+        );
+
+        mSocket.on("begin-4", new Emitter.Listener() {
+                    @Override
+                    public void call(final Object... args) {
+                        Log.e("TEST", "BEGIN 4");
+                        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.google.android.youtube");
+                        if (launchIntent != null) {
+                            startActivity(launchIntent);
+                        } else {
+                            Log.e("TEST", "There is no package available in android");
+                        }
                     };
 
                 }
