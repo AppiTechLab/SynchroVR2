@@ -1,10 +1,20 @@
 package ch.hevs.vr.synchrovr;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.os.IBinder;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.JobIntentService;
+import androidx.core.app.NotificationCompat;
 import androidx.legacy.content.WakefulBroadcastReceiver;
 
 import com.github.nkzawa.emitter.Emitter;
@@ -22,15 +32,11 @@ import java.net.URISyntaxException;
  * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
-public class SynchroIntentService extends IntentService {
-    // TODO: Rename actions, choose action names that describe tasks that this
-    // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    private static final String ACTION_FOO = "ch.hevs.vr.synchrovr.action.FOO";
-    private static final String ACTION_BAZ = "ch.hevs.vr.synchrovr.action.BAZ";
+public class SynchroIntentService extends JobIntentService {
 
-    // TODO: Rename parameters
-    private static final String EXTRA_PARAM1 = "ch.hevs.vr.synchrovr.extra.PARAM1";
-    private static final String EXTRA_PARAM2 = "ch.hevs.vr.synchrovr.extra.PARAM2";
+
+    static final int JOB_ID = 1000;
+    public static final String CHANNEL_ID = "ForegroundServiceChannel";
 
     private AsyncHttpClient aClient = new SyncHttpClient();
     private Socket mSocket;
@@ -41,49 +47,56 @@ public class SynchroIntentService extends IntentService {
     }
 
     public SynchroIntentService() {
-        super("SynchroIntentService");
-    }
 
-    /**
-     * Starts this service to perform action Foo with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-    // TODO: Customize helper method
-    public static void startActionFoo(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, SynchroIntentService.class);
-        intent.setAction(ACTION_FOO);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
-    }
-
-    /**
-     * Starts this service to perform action Baz with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-    // TODO: Customize helper method
-    public static void startActionBaz(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, SynchroIntentService.class);
-        intent.setAction(ACTION_BAZ);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
     }
 
     @Override
-    protected void onHandleIntent(final Intent intent) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
+        String input = intent.getStringExtra("inputExtra");
+        createNotificationChannel();
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                0, notificationIntent, 0);
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Foreground Service")
+                .setContentText(input)
+                .setContentIntent(pendingIntent)
+                .build();
+
+        startForeground(1, notification);
+        return START_STICKY;
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Foreground Service Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(serviceChannel);
+        }
+    }
+
+
+    public static void enqueueWork(Context context, Intent intent) {
+        enqueueWork(context, SynchroIntentService.class, JOB_ID, intent);
+    }
+
+    @Override
+    protected void onHandleWork(@NonNull Intent intent) {
         Log.e("TEST", "Intent active");
         String someUrlHere="https://vrcransmontana.ehealth.hevs.ch/";
-        WakefulBroadcastReceiver.completeWakefulIntent(intent);
+
 
         mSocket.on("begin-1", new Emitter.Listener() {
                     @Override
                     public void call(final Object... args) {
-                            Log.e("TEST", "BEGIN 1");
+                        Log.e("TEST", "BEGIN 1");
                         Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.google.android.youtube");
                         if (launchIntent != null) {
                             startActivity(launchIntent);
@@ -142,48 +155,13 @@ public class SynchroIntentService extends IntentService {
         );
         mSocket.connect();
 
-        /*aClient.get(this, someUrlHere, new AsyncHttpResponseHandler() {
-            // ... onSuccess here
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
-            }
-        });*/
-        if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_FOO.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionFoo(param1, param2);
-            } else if (ACTION_BAZ.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionBaz(param1, param2);
-            }
-        }
     }
 
-    /**
-     * Handle action Foo in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionFoo(String param1, String param2) {
-        // TODO: Handle action Foo
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Intent broadcastIntent = new Intent(this, RestarterBroadcastReceiver.class);
 
-    /**
-     * Handle action Baz in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionBaz(String param1, String param2) {
-        // TODO: Handle action Baz
-        throw new UnsupportedOperationException("Not yet implemented");
+        sendBroadcast(broadcastIntent);
     }
 }
