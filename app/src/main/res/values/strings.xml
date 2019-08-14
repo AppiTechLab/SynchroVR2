@@ -1,5 +1,405 @@
 <resources>
     <string name="app_name">SynchroVR</string>
     <string name="title_activity_main">MainActivity</string>
+
+
+    <string name="sensor_category_imu">IMU Raw</string>
+    <string name="sensor_category_imu_calibrated">IMU Calibrated</string>
+    <string name="sensor_category_imu_computed">IMU Computed</string>
+    <string name="sensor_category_environment">Environment</string>
+    <string name="sensor_category_radio">Radio</string>
+    <string name="sensor_category_radio_computed">Radio Computed</string>
+    <string name="sensor_category_other">Other</string>
+    <string name="sensor_category_unknown">Unknown</string>
+
+
+    <string name="file_name_wifi">wifi</string>
+    <string name="file_name_accelerometer">accelerometer</string>
+    <string name="file_name_gyroscope_uncalibrated">gyroscope</string>
+    <string name="file_name_magnetometer_uncalibrated">magnetometer</string>
+    <string name="file_name_gyroscope">gyroscope-calibrated</string>
+    <string name="file_name_magnetometer">magnetometer-calibrated</string>
+    <string name="file_name_game_rotation_vector">game-rotation-vector</string>
+    <string name="file_name_geomagnetic_rotation_vector">geomagnetic-rotation-vector</string>
+    <string name="file_name_gravity">gravity</string>
+    <string name="file_name_linear_acceleration">linear-acceleration</string>
+    <string name="file_name_rotation_vector">rotation-vector</string>
+    <string name="file_name_significant_motion">significant-motion</string>
+    <string name="file_name_step_counter">step-counter</string>
+    <string name="file_name_step_detector">step-detector</string>
+    <string name="file_name_ambient_temperature">ambient-temperature</string>
+    <string name="file_name_light">light</string>
+    <string name="file_name_pressure">pressure</string>
+    <string name="file_name_relative_humidity">relative-humidity</string>
+    <string name="file_name_heart_rate">heart-rate</string>
+    <string name="file_name_proximity">proximity</string>
+    <string name="file_name_unknown">unknown</string>
+    <string name="file_name_location_passive">location-passive</string>
+    <string name="file_name_location_gps">location-gps</string>
+    <string name="file_name_location_wifi_and_cells">location-wifi-cells</string>
+    <string name="file_name_bluetooth">bluetooth</string>
+    <string name="file_name_nmea">nmea</string>
+    <string name="file_name_nfc">nfc</string>
+    <string name="file_name_camera">video</string>
+    <string name="file_name_reference_timestamps">references</string>
+
+    <string-array name="fields_wifi">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>bssid</item>
+        <item>ssid</item>
+        <item>frequency</item>
+        <item>rssi</item>
+        <item>capabilities</item>
+    </string-array>
+    <string name="description_wifi">
+		Frequency is in MHz. RSSI is in dBm. Capabilities describes the authentication,
+		key management, and encryption schemes supported by the access point.
+	</string>
+
+    <string-array name="fields_accelerometer">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>x</item>
+        <item>y</item>
+        <item>z</item>
+    </string-array>
+    <string name="description_accelerometer">
+		All values are in SI units (m/s^2).
+	</string>
+
+    <string-array name="fields_gyroscope_uncalibrated">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>x</item>
+        <item>y</item>
+        <item>z</item>
+        <item>estimated-drift-x</item>
+        <item>estimated-drift-y</item>
+        <item>estimated-drift-z</item>
+    </string-array>
+    <string name="description_gyroscope_uncalibrated">
+		All values are in radians/second. Factory calibration and temperature compensation are
+		still applied to the rate of rotation (angular speeds).
+	</string>
+
+    <string-array name="fields_magnetometer_uncalibrated">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>x</item>
+        <item>y</item>
+        <item>z</item>
+        <item>estimated-bias-x</item>
+        <item>estimated-bias-y</item>
+        <item>estimated-bias-z</item>
+    </string-array>
+    <string name="description_magnetometer_uncalibrated">
+		All values are in micro-Tesla (uT). Factory calibration and temperature compensation
+		are applied to this measurement
+	</string>
+
+    <string-array name="fields_gyroscope">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>x</item>
+        <item>y</item>
+        <item>z</item>
+    </string-array>
+    <string name="description_gyroscope">
+		All values are in radians/second.
+	</string>
+
+    <string-array name="fields_magnetometer">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>x</item>
+        <item>y</item>
+        <item>z</item>
+    </string-array>
+    <string name="description_magnetometer">
+		All values are in micro-Tesla (uT).
+	</string>
+
+    <string-array name="fields_game_rotation_vector">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>x*sin(&#952;/2)</item>
+        <item>y*sin(&#952;/2)</item>
+        <item>z*sin(&#952;/2)</item>
+        <item>cos(&#952;/2)</item>
+        <item>estimated-heading-accuracy</item>
+    </string-array>
+    <string name="description_game_rotation_vector">
+		Estimated-heading-accuracy is in radians. Identical to rotation-vector except that it
+		doesn\'t use the geomagnetic field. Therefore the Y axis doesn\'t point north, but instead
+		to some other reference.
+	</string>
+
+    <string-array name="fields_geomagnetic_rotation_vector">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>x*sin(&#952;/2)</item>
+        <item>y*sin(&#952;/2)</item>
+        <item>z*sin(&#952;/2)</item>
+        <item>cos(&#952;/2)</item>
+    </string-array>
+    <string name="description_geomagnetic_rotation_vector">
+		Similar to rotation-vector, but using a magnetometer instead of using a gyroscope.
+	</string>
+
+    <string-array name="fields_gravity">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>x</item>
+        <item>y</item>
+        <item>z</item>
+    </string-array>
+    <string name="description_gravity">
+		All values are in SI units (m/s^2). A three dimensional vector indicating the direction
+		and magnitude of gravity.
+	</string>
+
+    <string-array name="fields_linear_acceleration">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>x</item>
+        <item>y</item>
+        <item>z</item>
+    </string-array>
+    <string name="description_linear_acceleration">
+		All values are in SI units (m/s^2).
+	</string>
+
+    <string-array name="fields_rotation_vector">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>x*sin(&#952;/2)</item>
+        <item>y*sin(&#952;/2)</item>
+        <item>z*sin(&#952;/2)</item>
+        <item>cos(&#952;/2)</item>
+        <item>estimated-heading-accuracy</item>
+    </string-array>
+    <string name="description_rotation_vector">
+		Estimated-heading-accuracy is in radians. The rotation vector represents the orientation of
+		the device as a combination of an angle and an axis, in which the device has rotated through
+		an angle &#952; around an axis &#60;x, y, z&#62;.
+		The reference coordinate system is defined as a direct orthonormal basis, where:
+		X is defined as the vector product Y.Z (It is tangential to the ground at the device\'s
+			current location and roughly points East).
+		Y is tangential to the ground at the device\'s current location and points towards magnetic
+			north.
+		Z points towards the sky and is perpendicular to the ground.
+	</string>
+
+    <string-array name="fields_significant_motion">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+    </string-array>
+    <string name="description_significant_motion">
+		It triggers when an event occurs and then automatically disables itself.
+	</string>
+
+    <string-array name="fields_step_counter">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+    </string-array>
+    <string name="description_step_counter">
+		A sensor of this type returns the number of steps taken by the user since the last reboot
+		while activated.
+	</string>
+
+    <string-array name="fields_step_detector">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+    </string-array>
+    <string name="description_step_detector">
+		A sensor of this type triggers an event each time a step is taken by the
+		user. The only allowed value to return is 1.0 and an event is generated
+		for each step. Like with any other event, the timestamp indicates when
+		the event (here the step) occurred, this corresponds to when the foot
+		hit the ground, generating a high variation in acceleration.
+	</string>
+
+    <string-array name="fields_ambient_temperature">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>temperature</item>
+    </string-array>
+    <string name="description_ambient_temperature">
+		Ambient (room) temperature in degree Celsius.
+	</string>
+
+    <string-array name="fields_light">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>light</item>
+    </string-array>
+    <string name="description_light">
+		Ambient light level in SI lux units.
+	</string>
+
+    <string-array name="fields_pressure">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>pressure</item>
+    </string-array>
+    <string name="description_pressure">
+		Atmospheric pressure in hPa (millibar).
+	</string>
+
+    <string-array name="fields_relative_humidity">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>humidity</item>
+    </string-array>
+    <string name="description_relative_humidity">
+		Relative ambient air humidity in percent.
+	</string>
+
+    <string-array name="fields_heart_rate">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>heart-rate</item>
+    </string-array>
+    <string name="description_heart_rate">
+		A constant describing a heart rate monitor. The reported value is the heart rate in
+		beats per minute.
+	</string>
+
+    <string-array name="fields_proximity">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>proximity</item>
+    </string-array>
+    <string name="description_proximity">
+		Proximity sensor distance measured in centimeters. Note: Some proximity sensors only support
+		a binary near or far measurement. In this case, the sensor should report its maximum range
+		value in the far state and a lesser value in the near state.
+	</string>
+
+    <string-array name="fields_unknown">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+    </string-array>
+    <string name="description_unknown">
+		Sorry, there is no description for this sensor.
+	</string>
+
+    <string-array name="fields_location">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>latitude</item>
+        <item>longitude</item>
+        <item>altitude</item>
+        <item>bearing</item>
+        <item>accuracy</item>
+        <item>speed</item>
+    </string-array>
+    <string name="description_location_passive">
+		Latitude, longitude and bearing are in degrees. Altitude and accuracy are in meters.
+		Speed is in meters/second. This provider can be used to passively receive location updates
+		when other applications or services request them without actually requesting the locations
+		yourself.
+	</string>
+
+
+    <string name="description_location_gps">
+		This provider determines location using satellites. Depending on conditions, this provider
+		may take a while to return a location fix..
+	</string>
+
+    <string name="description_location_wifi_and_cells">
+		This provider determines location based on availability of cell tower and WiFi access points.
+		Results are retrieved by means of a network lookup.
+	</string>
+
+    <string-array name="fields_bluetooth">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>BSSID</item>
+        <item>rssi</item>
+        <item>data</item>
+    </string-array>
+    <string name="description_bluetooth">
+		RSSI is in dBm.
+	</string>
+
+    <string-array name="fields_nmea">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>data</item>
+    </string-array>
+    <string name="description_nmea">
+		NMEA data from the GPS. NMEA 0183 is a standard for communicating with marine electronic
+		devices and is a common method for receiving data from a GPS, typically over a serial port.
+	</string>
+
+    <string-array name="fields_nfc">
+        <item>elapsed-time-system</item>
+        <item>elapsed-time-sensor</item>
+        <item>data</item>
+    </string-array>
+    <string name="description_nfc">
+		Ndef records with a TNF Well Known
+	</string>
+
+    <string name="description_camera">
+		Video stream from the rear camera.
+	</string>
+
+    <string-array name="fields_position_references">
+        <item>elapsed-time-system</item>
+    </string-array>
+    <string name="description_position_references">
+		timestamp
+		Reference timestamp when clicked.
+</string>
+
+
+    <string name="unit_acceleration"><![CDATA[%1$f m.s<sup><small>-2</small></sup>]]></string>
+    <string name="unit_rotation_speed"><![CDATA[%1$f rad.s<sup><small>-1</small></sup>]]></string>
+    <string name="unit_magnetic_field">%1$f \u00B5T</string>
+    <string name="unit_light">%1$f lx</string>
+    <string name="unit_temperature">%1$f \u00B0C</string>
+    <string name="unit_pressure">%1$f hPa</string>
+    <string name="unit_relative">%1$f %</string>
+    <string name="unit_proximity">%1$f cm</string>
+    <string name="unit_steps">%1$f steps</string>
+
+
+
+    <string name="folder_logs_sd_card" translatable="false">senslogs</string>
+
+    <string name="folder_calibration_accelerometer" translatable="false">%1$s_calib_acc</string>
+    <string name="folder_calibration_gyroscope" translatable="false">%1$s_calib_gyr</string>
+    <string name="folder_calibration_magnetometer" translatable="false">%1$s_calib_mag</string>
+
+    <string name="date_format_file_default" translatable="false">yyyyMMdd_HHmmss</string>
+
+    <string name="file_record_properties" translatable="false">record.properties</string>
+
+    <string name="record_notification">Recording&#8230;</string>
+    <string name="record_start">Start</string>
+    <string name="record_pause">Pause</string>
+    <string name="record_cancel">Cancel</string>
+    <string name="record_finish">Finish</string>
+    <string name="record_data_size_title">Uncompressed size</string>
+    <string name="record_data_size">%1$d kB</string>
+    <string name="record_data_size_default">0 kB</string>
+    <string name="record_timestamp">Record timestamp</string>
+
+    <string name="record_finished_dialog_title">Record Title</string>
+    <string name="record_finished_dialog_ok">Save</string>
+    <string name="record_finished_dialog_cancel">Cancel</string>
+    <string name="record_finished_empty_filename">untitled</string>
+
+    <string name="record_cancelled_dialog_message">Are you sure you want to delete current record ?</string>
+    <string name="record_cancelled_dialog_yes">Delete</string>
+    <string name="record_cancelled_dialog_no">Back</string>
+
+    <string name="record_data_saved"><![CDATA[<b>%1$s</b> saved in logs]]></string>
+    <string name="record_data_saved_see">SEE</string>
+
+
 </resources>
 

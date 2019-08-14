@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,7 @@ public class SynchroIntentService extends JobIntentService {
 
     static final int JOB_ID = 1000;
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
+    public static Context ctx;
 
     private AsyncHttpClient aClient = new SyncHttpClient();
     private Socket mSocket;
@@ -52,6 +54,8 @@ public class SynchroIntentService extends JobIntentService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent == null)
+            return START_STICKY;
         super.onStartCommand(intent, flags, startId);
         String input = intent.getStringExtra("inputExtra");
         createNotificationChannel();
@@ -84,6 +88,7 @@ public class SynchroIntentService extends JobIntentService {
 
 
     public static void enqueueWork(Context context, Intent intent) {
+        ctx = context;
         enqueueWork(context, SynchroIntentService.class, JOB_ID, intent);
     }
 
@@ -92,17 +97,32 @@ public class SynchroIntentService extends JobIntentService {
         Log.e("TEST", "Intent active");
         String someUrlHere="https://vrcransmontana.ehealth.hevs.ch/";
 
+        final Intent defaultIntent = getPackageManager().getLaunchIntentForPackage("com.oculus.UnitySample");
+        defaultIntent.putExtra("keep", true);
+        if (defaultIntent != null) {
+            SensorsLogger.startLog(ctx);
+            startActivity(defaultIntent);
+        } else {
+            Log.e("TEST", "There is no package available in android");
+        }
+
 
         mSocket.on("begin-1", new Emitter.Listener() {
                     @Override
                     public void call(final Object... args) {
+
+                        SensorsLogger.stopLog();
+                        //SensorsLogger.save();
                         Log.e("TEST", "BEGIN 1");
-                        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.google.android.youtube");
+                        defaultIntent.putExtra("keep", false);
+                        startActivity(defaultIntent);
+                        Intent launchIntent = getPackageManager().getLaunchIntentForPackage("it.immersio.sdcc1");
                         if (launchIntent != null) {
                             startActivity(launchIntent);
                         } else {
                             Log.e("TEST", "There is no package available in android");
                         }
+
 
                     };
 
@@ -161,7 +181,6 @@ public class SynchroIntentService extends JobIntentService {
     public void onDestroy() {
         super.onDestroy();
         Intent broadcastIntent = new Intent(this, RestarterBroadcastReceiver.class);
-
         sendBroadcast(broadcastIntent);
     }
 }

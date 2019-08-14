@@ -8,19 +8,12 @@ import android.util.Log;
 public class BootBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
-        Log.e("TEST", "broadcast test");
-        Log.v("TEST", "broadcast test1");
-        Log.d("TEST", "broadcast test2");
-        Log.i("TEST", "broadcast test3");
+        Log.e("TEST", "boot broadcast received");
 
-        /*Intent i = new Intent(Intent.ACTION_MAIN);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        i.setComponent(new ComponentName("com.oculus.UnitySample","com.unity3d.player.UnityPlayerActivity"));
-        context.startActivity(i);*/
+
 
         Intent starter = new Intent(context, SynchroIntentService.class);
         context.startForegroundService(starter);
-
         SynchroIntentService.enqueueWork(context, starter);
 
 

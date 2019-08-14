@@ -2,11 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ch.hevs.vr.synchrovr">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACTION_LOCKED_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -41,6 +46,16 @@
             android:enabled="true"
             android:exported="true"
             android:label="RestartServiceWhenStopped">
+        </receiver>
+
+
+        <receiver
+            android:name=".FinishBroadcastReceiver"
+            android:keepScreenOn="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="it.immersio.sdcc1.CHAPTER1FINISHED" />
+            </intent-filter>
         </receiver>
 
     </application>
