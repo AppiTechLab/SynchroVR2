@@ -19,8 +19,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import ch.hevs.vr.synchrovr.Logger.model.FieldsWritableObject;
 import ch.hevs.vr.synchrovr.Logger.model.PositionReference;
@@ -47,6 +49,8 @@ public class RecorderWriter {
     private StringBuilder buffer1 = new StringBuilder();
     private StringBuilder buffer2 = new StringBuilder();
 
+    private ExecutorService mExecutorService;
+
     private Map<WritableObject, FileOutputStream> mSensorsFos;
     private Map<WritableObject, File> mSensorsFiles;
 
@@ -56,6 +60,7 @@ public class RecorderWriter {
         mContext = context;
         mSensorsFos = new HashMap<>();
         mSensorsFiles = new HashMap<>();
+        mExecutorService = Executors.newFixedThreadPool(5);
     }
 
     public void init(Log log) throws FileNotFoundException {
@@ -136,7 +141,14 @@ public class RecorderWriter {
 
     public void asycWrite(final WritableObject writableObject, final double elapsedTimeSystem,
                           final Double elapsedTimeSensor, final Object[] values) {
-        executor.execute(() -> write(writableObject, elapsedTimeSystem, elapsedTimeSensor, values));
+        try{
+            executor.execute(() -> write(writableObject, elapsedTimeSystem, elapsedTimeSensor, values));
+
+        }catch(Exception e){
+            android.util.Log.e("Executor", "isShutdown = " + String.valueOf(executor.isShutdown()));
+            e.printStackTrace();
+        }
+
     }
 
     public void write(final WritableObject writableObject, final double elapsedTimeSystem,
@@ -166,7 +178,9 @@ public class RecorderWriter {
 
     public void finish() throws IOException {
 
-        executor.shutdown();
+
+        //ANTOINE CHANGED IT
+        //executor.shutdown();
 
         for (FileOutputStream fos : mSensorsFos.values()) {
             fos.flush();
@@ -253,10 +267,17 @@ public class RecorderWriter {
 //                Collection<File> inputFiles = new ArrayList<>(mSensorsFiles.values());
 //        inputFiles.add(writeDescriptionFile(log));
 
-        ZipCreationTask zipTask = new ZipCreationTask();
-        ZipCreationTask.Params params = new ZipCreationTask.Params(outputFile, inputFiles);
-        zipTask.execute(params);
-
+        ZipCreationTask zipTask = new ZipCreationTask(outputFile, inputFiles);
+        //ZipCreationTask.Params params = new ZipCreationTask.Params(outputFile, inputFiles);
+        //zipTask.execute(params);
+        Future<File> future = mExecutorService.submit(zipTask);
+        try {
+            outputFile = future.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return new Pair<>(outputFile, zipTask);
     }
 

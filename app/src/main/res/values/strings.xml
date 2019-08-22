@@ -399,6 +399,7 @@
 
     <string name="record_data_saved"><![CDATA[<b>%1$s</b> saved in logs]]></string>
     <string name="record_data_saved_see">SEE</string>
+    <string name="sensors_record_dir">sensors</string>
 
 
 </resources>

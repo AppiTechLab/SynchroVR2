@@ -20,11 +20,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitApiClient {
 
     private static Retrofit retrofit = null;
-    private static String BASE_URL = "127.0.0.1";
+    private static String BASE_URL;
+    private static String user;
+    private static String password;
 
     public static ApiInterface getApiService() {
 
         OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new BasicAuthInterceptor(user, password))
                 .readTimeout(2, TimeUnit.MINUTES)
                 .writeTimeout(2, TimeUnit.MINUTES).addInterceptor(chain -> {
                     Request original = chain.request();
@@ -33,6 +36,7 @@ public class RetrofitApiClient {
                     Request request = requestBuilder.build();
                     return chain.proceed(request);
                 }).build();
+
 
         if (retrofit == null) {
 

@@ -11,16 +11,63 @@ import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 /**
  * Creation of log files asynchronously and put it on a zip
  */
-public class ZipCreationTask extends AsyncTask<ZipCreationTask.Params,
-        ZipCreationTask.Progress, File> {
+public class ZipCreationTask implements Callable<File>{ //extends AsyncTask<ZipCreationTask.Params, ZipCreationTask.Progress, File> {
 
     private static final int BUFFER = 2048;
+    private File mOutputFile;
+    private Collection<File> mInputFiles;
+
+    public  ZipCreationTask(File outPutFile, Collection<File> inputFiles)
+    {
+        mOutputFile=outPutFile;
+        mInputFiles=inputFiles;
+    }
+
+    @Override
+    public File call() throws Exception {
+
+
+        long totalFilesSize = 0l;
+        for (File file : mInputFiles) {
+            totalFilesSize += file.length();
+        }
+
+        long currentFilesRead = 0l;
+        try {
+            BufferedInputStream origin;
+            FileOutputStream dest = new FileOutputStream(mOutputFile);
+
+            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+
+            byte data[] = new byte[BUFFER];
+
+            for (File file : mInputFiles) {
+                FileInputStream fi = new FileInputStream(file);
+                origin = new BufferedInputStream(fi, BUFFER);
+                ZipEntry entry = new ZipEntry(file.getName());
+                out.putNextEntry(entry);
+                int count;
+                while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                    out.write(data, 0, count);
+                    currentFilesRead += count;
+                }
+                origin.close();
+            }
+
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return mOutputFile;
+    }
 
     public static class Params {
         public Collection<File> inputFiles;
@@ -32,16 +79,7 @@ public class ZipCreationTask extends AsyncTask<ZipCreationTask.Params,
         }
     }
 
-    public static class Progress {
-        public File currentFile;
-        public float totalProgress;
-
-        public Progress(File currentFile, float totalProgress) {
-            this.currentFile = currentFile;
-            this.totalProgress = totalProgress;
-        }
-    }
-
+/*
     @Override
     protected File doInBackground(Params... params) {
 
@@ -88,6 +126,10 @@ public class ZipCreationTask extends AsyncTask<ZipCreationTask.Params,
         return outputFile;
     }
 
+    @Override
+    protected void onPostExecute(File f) {
+
+    }
 
     @Override
     protected void onProgressUpdate(final Progress... values) {
@@ -128,5 +170,5 @@ public class ZipCreationTask extends AsyncTask<ZipCreationTask.Params,
     public void removeListener(ZipCreationListener listener) {
         mListeners.remove(listener);
     }
-
+*/
 }

@@ -17,7 +17,7 @@ public interface ApiInterface {
 
 
     @Multipart
-    @POST("fileUpload.php")
-    Single<ResponseBody> onFileUpload(@Part("email") RequestBody mEmail, @Part MultipartBody.Part file);
+    @POST("/upload")
+    Single<ResponseBody> onFileUpload(@Part("file") RequestBody mFile, @Part MultipartBody.Part file);
 
 }

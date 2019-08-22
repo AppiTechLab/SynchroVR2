@@ -2,6 +2,7 @@ package ch.hevs.vr.synchrovr.Logger.model.log;
 
 import android.content.Context;
 import android.os.Build;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.Settings;
 
@@ -21,6 +22,11 @@ import java.util.UUID;
 import ch.hevs.vr.synchrovr.Logger.model.WritableObject;
 import ch.hevs.vr.synchrovr.Logger.model.sensors.Sensor;
 import ch.hevs.vr.synchrovr.Logger.control.ZipCreationTask;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 
 /**
@@ -44,6 +50,7 @@ public class Log implements Serializable {
     private String mUser;
     private String mPositionOrientation;
     private String mComment;
+    private ExecutorService mExecutorService;
 
     private transient ZipCreationTask mZipCreationTask;
 
@@ -59,11 +66,13 @@ public class Log implements Serializable {
 
         mListeners = new ArrayList<>();
         mRecordTimes = new RecordTimes();
+        ExecutorService mExecutorService = Executors.newFixedThreadPool(5);
     }
 
     public void init(Context context) throws FileNotFoundException {
 
         // Create new folder for records
+
         mTemporaryFolder = new File(context.getFilesDir(), String.valueOf(UUID.randomUUID()));
         if (!mTemporaryFolder.mkdir()) {
             throw new FileNotFoundException();
@@ -76,8 +85,10 @@ public class Log implements Serializable {
 
     public void setName(String newName) {
         mName = newName;
-        notifyDatasetChanged();
+        //notifyDatasetChanged();
     }
+
+
 
     public void setZipFile(File zipFile) {
         mZipFile = zipFile;
@@ -90,6 +101,9 @@ public class Log implements Serializable {
     public void setZipCreationTask(ZipCreationTask zipCreationTask) {
         mZipCreationTask = zipCreationTask;
 
+        }
+
+/*
         if (mZipCreationTask != null) {
             mZipCreationTask.addListener(new ZipCreationTask.ZipCreationListener() {
                 @Override
@@ -106,9 +120,8 @@ public class Log implements Serializable {
                     }
                     notifyDatasetChanged();
                 }
-            });
-        }
-    }
+            }); */
+
 
     public void setUser(String user) {
         mUser = user;
@@ -203,7 +216,6 @@ public class Log implements Serializable {
                 ", mPositionOrientation='" + mPositionOrientation + '\'' +
                 ", mComment='" + mComment + '\'' +
                 ", mZipCreationTask=" + mZipCreationTask +
-                ", mListeners=" + mListeners +
                 '}';
     }
 

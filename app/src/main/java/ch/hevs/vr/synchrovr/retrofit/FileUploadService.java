@@ -68,7 +68,7 @@ public class FileUploadService extends JobIntentService {
         Flowable<Double> fileObservable = Flowable.create(new FlowableOnSubscribe<Double>() {
             @Override
             public void subscribe(FlowableEmitter<Double> emitter) throws Exception {
-                apiService.onFileUpload(FileUploadService.this.createRequestBodyFromText("info@androidwave.com"), FileUploadService.this.createMultipartBody(mFilePath, emitter)).blockingGet();
+                apiService.onFileUpload(FileUploadService.this.createRequestBodyFromText("file"), FileUploadService.this.createMultipartBody(mFilePath, emitter)).blockingGet();
                 emitter.onComplete();
             }
         }, BackpressureStrategy.LATEST);
@@ -144,7 +144,7 @@ public class FileUploadService extends JobIntentService {
      */
     private MultipartBody.Part createMultipartBody(String filePath, FlowableEmitter<Double> emitter) {
         File file = new File(filePath);
-        return MultipartBody.Part.createFormData("myFile", file.getName(), createCountingRequestBody(file, MIMEType.IMAGE.value, emitter));
+        return MultipartBody.Part.createFormData("file", file.getName(), createCountingRequestBody(file, MIMEType.IMAGE.value, emitter));
     }
 
     private RequestBody createCountingRequestBody(File file, String mimeType, final FlowableEmitter<Double> emitter) {

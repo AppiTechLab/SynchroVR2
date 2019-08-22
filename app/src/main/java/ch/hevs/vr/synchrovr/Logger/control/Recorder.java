@@ -51,6 +51,7 @@ public class Recorder {
 
     private boolean isRecording = false;
     private boolean isInitialized = false;
+    private File zipFile;
 
     public Recorder(Context context, LogsManager logsManager,
                     PreferencesManager preferencesManager) {
@@ -187,7 +188,7 @@ public class Recorder {
         mRecorderWriter.writeReferences(mReferences);
         mRecorderWriter.finish();
 
-      //  resetTimer();
+        resetTimer();
 
         // Set title to unknown if null and replace non word characters by underscore
         if (title == null || title.isEmpty()) {
@@ -204,11 +205,11 @@ public class Recorder {
 
         // Create Zip File
         final Pair<File, ZipCreationTask> zipCreationPair = mRecorderWriter.createZipFile(filename, mLog);
-        final File zipFile = zipCreationPair.first;
+        zipFile = zipCreationPair.first;
         final ZipCreationTask zipTask = zipCreationPair.second;
 
         mLog.setZipCreationTask(zipTask);
-
+/*
         zipTask.addListener(new ZipCreationTask.ZipCreationListener() {
             @Override
             public void onProgress(File currentFile, float ratio) {
@@ -221,7 +222,7 @@ public class Recorder {
                 zipTask.removeListener(this);
             }
         });
-
+*/
         mLog.setZipFile(zipFile);
 
         mLogsManager.addLog(mLog);
@@ -231,6 +232,10 @@ public class Recorder {
         return mLog;
     }
 
+    public String getZipFilePath(){
+        return zipFile.getAbsolutePath();
+
+    }
 
     public Log.RecordTimes getRecordTimes() {
         return mLog.getRecordTimes();

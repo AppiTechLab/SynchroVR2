@@ -2,10 +2,15 @@ package ch.hevs.vr.synchrovr;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
 import android.util.Log;
+
+import ch.hevs.vr.synchrovr.retrofit.FileUploadService;
+import ch.hevs.vr.synchrovr.retrofit.RetrofitApiClient;
+import retrofit2.Retrofit;
 
 public class Connect2Network {
 
@@ -57,5 +62,13 @@ public class Connect2Network {
             wifiManager.saveConfiguration();
         }
     }
+
+    public static void sendFile(Context ctx, String fileName) {
+        String path = ctx.getFilesDir()+ ctx.getString(R.string.sensors_record_dir);
+        Intent mIntent = new Intent(ctx, FileUploadService.class);
+        mIntent.putExtra("mFilePath", path + fileName);
+        FileUploadService.enqueueWork(ctx, mIntent);
+}
+
 
 }

@@ -56,4 +56,7 @@ public class SensorsLogger {
             e.printStackTrace();
         }
     }
+    public static String getFilePath(){
+        return mRecorder.getZipFilePath();
+    }
 }
